@@ -11,6 +11,7 @@ import { ReactComponent as Star } from "../../assets/icons/star.svg";
 import { ReactComponent as Unlock } from "../../assets/icons/unlock.svg";
 import { ReactComponent as Watchers } from "../../assets/icons/watchers.svg";
 import { config } from "../../config/devdash";
+import { GithubRepository } from "../../interfaces/GithubRepository";
 import { ApiGithubRepository } from "../../services/ApiGithubRepository";
 import { GitHubApiResponses } from "../../services/GithubApiResponse";
 import styles from "./Dashboard.module.scss";
@@ -35,7 +36,7 @@ const isoToReadableDate = (lastUpdate: string): string => {
 export function Dashboard() {
 	const title = "DevDash_";
 	const repository = new ApiGithubRepository();
-	const [githubApiResponse, setGithubApiResponse] = useState<GitHubApiResponses[]>([]);
+	const [githubApiResponse, setGithubApiResponse] = useState<GithubRepository[]>([]);
 
 	useEffect(() => {
 		repository
