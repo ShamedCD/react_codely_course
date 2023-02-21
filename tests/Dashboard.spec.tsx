@@ -1,21 +1,31 @@
 import { render } from "@testing-library/react";
+import { mock } from "jest-mock-extended";
 
-import { githubApiResponses } from "../src/github_api_responses";
+import ApiGithubRepository from "../src/interfaces/ApiGithubRepository";
 import { Dashboard } from "../src/sections/dashboard/Dashboard";
-import { ApiGithubRepository } from "../src/services/ApiGithubRepository";
+import { GithubRepositoryFactory } from "./factories/GithubRepositoryFactory";
 
-jest.mock("../src/services/ApiGithubRepository");
-
-const mockGithubRepository = ApiGithubRepository as jest.Mock<ApiGithubRepository>;
+const mockGithubRepository = mock<ApiGithubRepository>();
 
 describe("Dashboard section", () => {
+	// eslint-disable-next-line @typescript-eslint/require-await
 	it("Shows all widgets", async () => {
-		mockGithubRepository.mockImplementationOnce(() => {
-			return {
-				search: () => Promise.resolve(githubApiResponses),
-			} as unknown as ApiGithubRepository;
+		const githubRepository = GithubRepositoryFactory.create();
+
+		mockGithubRepository.search.mockResolvedValue([githubRepository]);
+
+		render(<Dashboard repository={mockGithubRepository} />);
+
+		const title = await screen.findByRole("heading", {
+			name: new RegExp("DevDash_", "i"),
 		});
 
-		render(<Dashboard />);
+		const firstWidgetTitle = `${githubRepository.id.organization}/${githubRepository.id.name}`;
+		const firstWidgetheader = await screen.findByRole("heading", {
+			name: new RegExp(firstWidgetTitle, "i"),
+		});
+
+		expect(title).toBeInTheDocument();
+		expect(firstWidgetheader).toBeInTheDocument();
 	});
 });
