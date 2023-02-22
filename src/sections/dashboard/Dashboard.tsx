@@ -1,18 +1,18 @@
+import { faCircleXmark, faEye, faStar } from "@fortawesome/free-regular-svg-icons";
+import {
+	faCheck,
+	faCodeFork,
+	faCodePullRequest,
+	faLock,
+	faUnlock,
+	faXmark,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 
-import { ReactComponent as Brand } from "../../assets/icons/brand.svg";
-import { ReactComponent as Check } from "../../assets/icons/check.svg";
-import { ReactComponent as Error } from "../../assets/icons/error.svg";
-import { ReactComponent as IssueOpened } from "../../assets/icons/github-issue-opened.svg";
-import { ReactComponent as PullRequests } from "../../assets/icons/github-pull-request.svg";
-import { ReactComponent as Forks } from "../../assets/icons/github-repository-forked.svg";
-import { ReactComponent as Lock } from "../../assets/icons/lock.svg";
-import { ReactComponent as Star } from "../../assets/icons/star.svg";
-import { ReactComponent as Unlock } from "../../assets/icons/unlock.svg";
-import { ReactComponent as Watchers } from "../../assets/icons/watchers.svg";
 import { config } from "../../config/devdash";
+import ApiGithubRepository from "../../interfaces/ApiGithubRepository";
 import { GithubRepository } from "../../interfaces/GithubRepository";
-import { ApiGithubRepository } from "../../services/ApiGithubRepository";
 import styles from "./Dashboard.module.scss";
 
 const isoToReadableDate = (lastUpdateDate: Date): string => {
@@ -48,7 +48,6 @@ export function Dashboard({ repository }: { repository: ApiGithubRepository }) {
 		<>
 			<header className={styles.header}>
 				<section className={styles.header__container}>
-					<Brand />
 					<h1 className={styles.app__brand}>{title}</h1>
 				</section>
 			</header>
@@ -65,40 +64,50 @@ export function Dashboard({ repository }: { repository: ApiGithubRepository }) {
 							>
 								{widget.id.organization}/{widget.id.name}
 							</a>
-							{widget.private ? <Lock /> : <Unlock />}
+							{widget.private ? (
+								<FontAwesomeIcon icon={faLock} className={styles.widget__icon} />
+							) : (
+								<FontAwesomeIcon icon={faUnlock} className={styles.widget__icon} />
+							)}
 						</header>
 						<div className={styles.widget__body}>
 							<div className={styles.widget__status}>
 								<p>Last update {isoToReadableDate(widget.updatedAt)}</p>
 								{widget.hasWorkflows && (
-									<div>{widget.isLastWorkflowSuccess ? <Check /> : <Error />}</div>
+									<div>
+										{widget.isLastWorkflowSuccess ? (
+											<FontAwesomeIcon icon={faCheck} className={styles.widget__icon__success} />
+										) : (
+											<FontAwesomeIcon icon={faXmark} className={styles.widget__icon_error} />
+										)}
+									</div>
 								)}
 							</div>
 							<p className={styles.widget__description}>{widget.description}</p>
 						</div>
 						<footer className={styles.widget__footer}>
 							<div className={styles.widget__stat}>
-								<Star />
+								<FontAwesomeIcon icon={faStar} />
 								<span>{widget.stars}</span>
 							</div>
 
 							<div className={styles.widget__stat}>
-								<Watchers />
+								<FontAwesomeIcon icon={faEye} />
 								<span>{widget.watchers}</span>
 							</div>
 
 							<div className={styles.widget__stat}>
-								<Forks />
+								<FontAwesomeIcon icon={faCodeFork} />
 								<span>{widget.forks}</span>
 							</div>
 
 							<div className={styles.widget__stat}>
-								<IssueOpened />
+								<FontAwesomeIcon icon={faCircleXmark} />
 								<span>{widget.issues}</span>
 							</div>
 
 							<div className={styles.widget__stat}>
-								<PullRequests />
+								<FontAwesomeIcon icon={faCodePullRequest} />
 								<span>{widget.pullRequests}</span>
 							</div>
 						</footer>

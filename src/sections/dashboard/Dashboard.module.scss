@@ -86,4 +86,16 @@
         margin-left: 0.25rem;
       }
     }
+
+    &__icon {
+      color: #1a2233;
+
+      &__success {
+        color: #3cff64;
+      }
+
+      &__error {
+        color: #dc143c;
+      }
+    }
   }
