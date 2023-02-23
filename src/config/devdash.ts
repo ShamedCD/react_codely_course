@@ -21,5 +21,9 @@ export const config: DevDashConfig = {
 			id: "5d48bb51-2672-4f29-bdf2-bb17b9af0b80",
 			repository_url: "https://github.com/pedroslopez/whatsapp-web.js",
 		},
+		{
+			id: "a9f09a1e-ae29-4a6d-ad73-e19271a97cef",
+			repository_url: "https://github.com/ShamedCD/react_codely_course",
+		},
 	],
 };

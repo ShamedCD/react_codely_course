@@ -1,23 +1,14 @@
-import { useEffect, useState } from "react";
-
 import { GithubRepositoryWidget } from "../../components/GithubRepositoryWidget/GithubRepositoryWidget";
 import { config } from "../../config/devdash";
+import { useGithubRepositories } from "../../hooks/useGithubRepositories";
 import ApiGithubRepository from "../../interfaces/ApiGithubRepository";
-import { GithubRepository } from "../../interfaces/GithubRepository";
 import styles from "./Dashboard.module.scss";
+
+const githubRepositoryUrls = config.widgets.map((widget) => widget.repository_url);
 
 export function Dashboard({ repository }: { repository: ApiGithubRepository }) {
 	const title = "DevDash_";
-	const [githubApiResponse, setGithubApiResponse] = useState<GithubRepository[]>([]);
-
-	useEffect(() => {
-		repository
-			.search(config.widgets.map((widget) => widget.repository_url))
-			.then((response) => {
-				setGithubApiResponse(response);
-			})
-			.catch((err) => console.error(err));
-	}, []);
+	const { repositoryData } = useGithubRepositories(repository, githubRepositoryUrls);
 
 	return (
 		<>
@@ -26,14 +17,20 @@ export function Dashboard({ repository }: { repository: ApiGithubRepository }) {
 					<h1 className={styles.app__brand}>{title}</h1>
 				</section>
 			</header>
-			<section className={styles.container}>
-				{githubApiResponse.map((widget) => (
-					<GithubRepositoryWidget
-						key={`${widget.id.organization}/${widget.id.name}`}
-						widget={widget}
-					/>
-				))}
-			</section>
+			{repositoryData.length === 0 ? (
+				<div className={styles.empty}>
+					<span>No hay widgets configurados</span>
+				</div>
+			) : (
+				<section className={styles.container}>
+					{repositoryData.map((repository) => (
+						<GithubRepositoryWidget
+							key={`${repository.id.organization}/${repository.id.name}`}
+							widget={repository}
+						/>
+					))}
+				</section>
+			)}
 		</>
 	);
 }
