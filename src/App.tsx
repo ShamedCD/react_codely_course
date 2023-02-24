@@ -1,8 +1,5 @@
-import { Dashboard } from "./sections/dashboard/Dashboard";
-import { ApiGithubRepository } from "./services/ApiGithubRepository";
-
-const repository = new ApiGithubRepository();
+import { Router } from "./Router";
 
 export function App() {
-	return <Dashboard repository={repository} />;
+	return <Router />;
 }
