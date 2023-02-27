@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import ApiGithubRepository from "../interfaces/ApiGithubRepository";
+import { ApiGithubRepository } from "../interfaces/ApiGithubRepository";
 import { GithubRepository } from "../interfaces/GithubRepository";
 
 export function useGithubRepositories(

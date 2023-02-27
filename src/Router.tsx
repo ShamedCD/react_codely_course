@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { Main } from "./layouts/Main/Main";
 import { DashboardFactory } from "./sections/dashboard/DashboardFactory";
-import { WidgetDetail } from "./sections/detail/WidgetDetail";
+import { WidgetDetailFactory } from "./sections/detail/WidgetDetailFactory";
 
 const router = createBrowserRouter([
 	{
@@ -15,7 +15,7 @@ const router = createBrowserRouter([
 			},
 			{
 				path: "/repository/:organization/:name",
-				element: <WidgetDetail />,
+				element: WidgetDetailFactory.create(),
 			},
 		],
 	},

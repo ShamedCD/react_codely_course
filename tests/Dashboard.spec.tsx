@@ -1,6 +1,6 @@
 import { mock } from "jest-mock-extended";
 
-import ApiGithubRepository from "../src/interfaces/ApiGithubRepository";
+import { ApiGithubRepository } from "../src/interfaces/ApiGithubRepository";
 import { Dashboard } from "../src/sections/dashboard/Dashboard";
 import { GithubRepositoryFactory } from "./factories/GithubRepositoryFactory";
 import { renderWithRouter } from "./renderWithRouter";

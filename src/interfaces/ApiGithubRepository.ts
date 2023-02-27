@@ -1,5 +1,6 @@
-import { GithubRepository } from "./GithubRepository";
+import { GithubRepository, RepositoryId } from "./GithubRepository";
 
-export default interface ApiGithubRepository {
+export interface ApiGithubRepository {
 	search(repositoryUrls: string[]): Promise<GithubRepository[]>;
+	byId(repositoryId: RepositoryId): Promise<GithubRepository | undefined>;
 }

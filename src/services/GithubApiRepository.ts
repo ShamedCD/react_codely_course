@@ -1,4 +1,4 @@
-import ApiGithubRepositoryInterface from "../interfaces/ApiGithubRepository";
+import { ApiGithubRepository } from "../interfaces/ApiGithubRepository";
 import { GithubRepository } from "../interfaces/GithubRepository";
 import { CiStatus, PullRequest, RepositoryData } from "./GithubApiResponse";
 
@@ -7,7 +7,7 @@ interface RepositoryId {
 	name: string;
 }
 
-export class ApiGithubRepository implements ApiGithubRepositoryInterface {
+export class GithubApiRepository implements ApiGithubRepository {
 	private readonly endpoints = [
 		"https://api.github.com/repos/$organization/$name",
 		"https://api.github.com/repos/$organization/$name/pulls",
@@ -22,6 +22,10 @@ export class ApiGithubRepository implements ApiGithubRepositoryInterface {
 			.map((id) => this.searchBy(id));
 
 		return Promise.all(responsePromises);
+	}
+
+	async byId(repositoryId: RepositoryId): Promise<GithubRepository | undefined> {
+		return this.searchBy(repositoryId);
 	}
 
 	private async searchBy(repositoryId: RepositoryId): Promise<GithubRepository> {

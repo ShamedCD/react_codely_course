@@ -1,7 +1,7 @@
 import { GithubRepositoryWidget } from "../../components/GithubRepositoryWidget/GithubRepositoryWidget";
 import { config } from "../../config/devdash";
 import { useGithubRepositories } from "../../hooks/useGithubRepositories";
-import ApiGithubRepository from "../../interfaces/ApiGithubRepository";
+import { ApiGithubRepository } from "../../interfaces/ApiGithubRepository";
 import styles from "./Dashboard.module.scss";
 
 const githubRepositoryUrls = config.widgets.map((widget) => widget.repository_url);
