@@ -1,8 +1,11 @@
+import { faLock, faUnlock } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 
 import { useGithubRepository } from "../../hooks/useGithubRepository";
 import { ApiGithubRepository } from "../../interfaces/ApiGithubRepository";
+import styles from "./WidgetDetail.module.scss";
 
 export function WidgetDetail({ repository }: { repository: ApiGithubRepository }) {
 	const { organization, name } = useParams() as { organization: string; name: string };
@@ -10,8 +13,76 @@ export function WidgetDetail({ repository }: { repository: ApiGithubRepository }
 	const { repositoryData } = useGithubRepository(repository, repositoryId);
 
 	if (!repositoryData) {
-		return <span>No hay</span>;
+		return <></>;
 	}
 
-	return <span>{repositoryData.url}</span>;
+	return (
+		<section className={styles["repository-detail"]}>
+			<header className={styles.header}>
+				<a href={repositoryData.url} target="_blank" rel="noreferrer">
+					<h2 className={styles.header__title}>
+						{repositoryData.id.organization}/{repositoryData.id.name}
+					</h2>
+				</a>
+				{repositoryData.private ? (
+					<FontAwesomeIcon icon={faLock} className={styles.icon} />
+				) : (
+					<FontAwesomeIcon icon={faUnlock} className={styles.icon} />
+				)}
+			</header>
+
+			<p>{repositoryData.description}</p>
+
+			<h3>Repository stats</h3>
+			<table className={styles.detail__table}>
+				<thead>
+					<tr>
+						<th>Stars</th>
+						<th>Watchers</th>
+						<th>Forks</th>
+						<th>Issues</th>
+						<th>Pull Requests</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr>
+						<td>{repositoryData.stars}</td>
+						<td>{repositoryData.watchers}</td>
+						<td>{repositoryData.forks}</td>
+						<td>{repositoryData.issues}</td>
+						<td>{repositoryData.pullRequests}</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<h3>Workflow runs status</h3>
+			<table className={styles.detail__table}>
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Title</th>
+						<th>Date</th>
+						<th>Status</th>
+						<th>Conclusion</th>
+					</tr>
+				</thead>
+				<tbody>
+					{repositoryData.workflowRunsStatus.map((run) => (
+						<tr key={run.id}>
+							<td>{run.name}</td>
+							<td>
+								<a href={run.url} target="_blank" rel="noreferrer">
+									{run.title}
+								</a>
+							</td>
+							<td>{run.createdAt.toLocaleDateString("es-ES")}</td>
+							<td>{run.status}</td>
+							<td>{run.conclusion}</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</section>
+	);
 }
