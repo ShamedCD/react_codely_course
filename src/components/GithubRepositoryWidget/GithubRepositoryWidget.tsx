@@ -8,6 +8,7 @@ import {
 	faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
 
 import { GithubRepository } from "../../interfaces/GithubRepository";
 import styles from "./GithubRepositoryWidget.module.scss";
@@ -32,15 +33,11 @@ export function GithubRepositoryWidget({ widget }: { widget: GithubRepository })
 	return (
 		<article className={styles.widget} key={`${widget.id.organization}/${widget.id.name}`}>
 			<header className={styles.widget__header}>
-				<a
-					className={styles.widget__title}
-					href={`/repository/${widget.id.organization}/${widget.id.name}`}
-					target="_blank"
-					title={`${widget.id.organization}/${widget.id.name}`}
-					rel="noreferrer"
-				>
-					{widget.id.organization}/{widget.id.name}
-				</a>
+				<h2 className={styles.widget__title}>
+					<Link to={`/repository/${widget.id.organization}/${widget.id.name}`}>
+						{`${widget.id.organization}/${widget.id.name}`}
+					</Link>
+				</h2>
 				{widget.private ? (
 					<FontAwesomeIcon icon={faLock} className={styles.widget__icon} />
 				) : (
