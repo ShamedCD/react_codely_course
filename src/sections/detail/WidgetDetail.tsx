@@ -4,13 +4,23 @@ import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 
 import { useGithubRepository } from "../../hooks/useGithubRepository";
+import { useInViewport } from "../../hooks/useInViewPort";
 import { ApiGithubRepository } from "../../interfaces/ApiGithubRepository";
+import { GithubPullRequestRepository } from "../../interfaces/GithubPullRequestRepository";
+import { PullRequests } from "../PullRequests/PullRequests";
 import styles from "./WidgetDetail.module.scss";
 
-export function WidgetDetail({ repository }: { repository: ApiGithubRepository }) {
+export function WidgetDetail({
+	githubRepository,
+	githubPullRequestRepository,
+}: {
+	githubRepository: ApiGithubRepository;
+	githubPullRequestRepository: GithubPullRequestRepository;
+}) {
+	const { isInViewport, ref } = useInViewport();
 	const { organization, name } = useParams() as { organization: string; name: string };
 	const repositoryId = useMemo(() => ({ name, organization }), [name, organization]);
-	const { repositoryData } = useGithubRepository(repository, repositoryId);
+	const { repositoryData } = useGithubRepository(githubRepository, repositoryId);
 
 	if (!repositoryData) {
 		return <></>;
@@ -59,36 +69,48 @@ export function WidgetDetail({ repository }: { repository: ApiGithubRepository }
 
 			<h3>Workflow runs status</h3>
 
-			<p>
-				⏱️ Last workflow run:{" "}
-				{repositoryData.workflowRunsStatus[0].createdAt.toLocaleDateString("es-ES")}
-			</p>
-			<table className={styles.detail__table}>
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Title</th>
-						<th>Date</th>
-						<th>Status</th>
-						<th>Conclusion</th>
-					</tr>
-				</thead>
-				<tbody>
-					{repositoryData.workflowRunsStatus.map((run) => (
-						<tr key={run.id}>
-							<td>{run.name}</td>
-							<td>
-								<a href={run.url} target="_blank" rel="noreferrer">
-									{run.title}
-								</a>
-							</td>
-							<td>{run.createdAt.toLocaleDateString("es-ES")}</td>
-							<td>{run.status}</td>
-							<td>{run.conclusion}</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
+			{repositoryData.workflowRunsStatus.length > 0 ? (
+				<>
+					<p>
+						⏱️ Last workflow run:{" "}
+						{repositoryData.workflowRunsStatus[0].createdAt.toLocaleDateString("es-ES")}
+					</p>
+					<table className={styles.detail__table}>
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Title</th>
+								<th>Date</th>
+								<th>Status</th>
+								<th>Conclusion</th>
+							</tr>
+						</thead>
+						<tbody>
+							{repositoryData.workflowRunsStatus.map((run) => (
+								<tr key={run.id}>
+									<td>{run.name}</td>
+									<td>
+										<a href={run.url} target="_blank" rel="noreferrer">
+											{run.title}
+										</a>
+									</td>
+									<td>{run.createdAt.toLocaleDateString("es-ES")}</td>
+									<td>{run.status}</td>
+									<td>{run.conclusion}</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</>
+			) : (
+				<p>There are no workflow runs</p>
+			)}
+
+			<section ref={ref}>
+				{isInViewport && (
+					<PullRequests repository={githubPullRequestRepository} repositoryId={repositoryId} />
+				)}
+			</section>
 		</section>
 	);
 }
