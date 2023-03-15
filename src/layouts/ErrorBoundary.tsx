@@ -6,16 +6,10 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { hasError
 		hasError: false,
 	};
 
-	/**
-	 * getDerivedStateFromError
-	 */
 	public static getDerivedStateFromError(_: Error) {
 		return { hasError: true };
 	}
 
-	/**
-	 * componentDidCatch
-	 */
 	public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
 		console.error("Uncaught error:", error, errorInfo);
 	}
@@ -25,8 +19,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { hasError
 			return (
 				<>
 					<h2>Something went wrong.</h2>
-					{/* eslint-disable-next-line @typescript-eslint/unbound-method */}
-					<Link onClick={this.resetError} to={"/"}>
+					<Link onClick={() => this.resetError()} to={"/"}>
 						Return to home
 					</Link>
 				</>
