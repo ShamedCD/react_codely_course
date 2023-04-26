@@ -6,14 +6,24 @@ import { GithubRepositoryWidgetSkeleton } from "../../components/GithubRepositor
 import { config } from "../../config/devdash";
 import { useGithubRepositories } from "../../hooks/useGithubRepositories";
 import { ApiGithubRepository } from "../../interfaces/ApiGithubRepository";
+import { WidgetRepository } from "../../interfaces/WidgetRepository";
 import styles from "./Dashboard.module.scss";
 
-export function Dashboard({ repository }: { repository: ApiGithubRepository }) {
+export function Dashboard({
+	githubRepository,
+	widgetRepository,
+}: {
+	githubRepository: ApiGithubRepository;
+	widgetRepository: WidgetRepository;
+}) {
 	const githubRepositoryUrls = useMemo(() => {
 		return config.widgets.map((widget) => widget.repository_url);
 	}, []);
 
-	const { repositoryData, isLoading } = useGithubRepositories(repository, githubRepositoryUrls);
+	const { repositoryData, isLoading } = useGithubRepositories(
+		githubRepository,
+		githubRepositoryUrls
+	);
 
 	return (
 		<>
@@ -28,7 +38,7 @@ export function Dashboard({ repository }: { repository: ApiGithubRepository }) {
 						/>
 					))
 				)}
-				<AddWidgetForm />
+				<AddWidgetForm repository={widgetRepository} />
 			</section>
 
 			{isLoading && repositoryData.length === 0 && (
